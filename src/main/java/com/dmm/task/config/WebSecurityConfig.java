@@ -57,9 +57,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.logout().logoutSuccessUrl("/loginForm")
 				.permitAll();
 	}
-//	@Override
-//	protected void configure(HttpSecurity http) throws Exception {
-//		// すべてのリクエストを認証なしで通過させる
-//		http.authorizeRequests().anyRequest().permitAll();
-//	}
 }

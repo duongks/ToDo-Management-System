@@ -54,7 +54,7 @@ public class AccountUserDetails implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		// TODO 自動生成されたメソッド・スタブ
-		return false;
+		return true;
 	}
 
 	public Users getUser() {
