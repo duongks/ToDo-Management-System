@@ -7,6 +7,7 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
+
 @Data
 public class TaskForm {
 	@Size(min = 1, max = 200)

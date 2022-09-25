@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Data
 @Entity
-@ToString(exclude = "password") 
+@ToString(exclude = "password")
 public class Users {
 	@Id
 	public String userName;

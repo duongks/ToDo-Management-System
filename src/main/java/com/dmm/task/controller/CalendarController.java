@@ -26,13 +26,14 @@ public class CalendarController {
 	private TaskRepository repo;
 
 	@GetMapping("/main")
-	public String Calendarlist(Model model, @AuthenticationPrincipal AccountUserDetails user, @DateTimeFormat(pattern = "yyyy-MM-dd" )LocalDate date) {
+	public String Calendarlist(Model model, @AuthenticationPrincipal AccountUserDetails user,
+			@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 		System.out.println(date);
 		LocalDate dayNow = LocalDate.now();
-		if (date==null) {
-			
+		if (date == null) {
+
 		} else {
-			dayNow=date;
+			dayNow = date;
 		}
 		LocalDate d2 = LocalDate.of(dayNow.getYear(), dayNow.getMonthValue(), 1);
 		LocalDate d3 = LocalDate.of(dayNow.getYear(), dayNow.getMonthValue(), dayNow.lengthOfMonth());
@@ -44,10 +45,11 @@ public class CalendarController {
 		DayOfWeek w2 = d3.getDayOfWeek();
 
 		LocalDate daystart = d2.minusDays(7 - (7 - w1.getValue()));
-		
-		
-		int dayLengt = daystart.lengthOfMonth() - daystart.getDayOfMonth() + d2.lengthOfMonth() + (7 - w2.getValue() + 1);
-		LocalDate daysend=daystart.plusDays(dayLengt-2);
+		LocalDate daystart1 = d2.minusDays(7 - (7 - w1.getValue()));
+
+		int dayLengt = daystart.lengthOfMonth() - daystart.getDayOfMonth() + d2.lengthOfMonth()
+				+ (7 - w2.getValue() + 1);
+		LocalDate daysend = daystart1.plusDays(dayLengt - 2);
 		for (int j = 0; j < dayLengt; j++) {
 
 			listDate.add(daystart);
@@ -57,35 +59,29 @@ public class CalendarController {
 				listDate = new ArrayList<>();
 			}
 		}
-		
-		String day=dayNow.format(DateTimeFormatter.ofPattern("yyyy年MM月"));
-		
-		model.addAttribute("prev",dayNow.minusMonths(1));
-		model.addAttribute("next",dayNow.plusMonths(1));
-		model.addAttribute("month",day);
+
+		String day = dayNow.format(DateTimeFormatter.ofPattern("yyyy年MM月"));
+
+		model.addAttribute("prev", dayNow.minusMonths(1));
+		model.addAttribute("next", dayNow.plusMonths(1));
+		model.addAttribute("month", day);
 		model.addAttribute("matrix", lists);
+
 		MultiValueMap<LocalDate, Tasks> tasks = new LinkedMultiValueMap<>();
-//		List<Tasks> list = repo.findAll();
-		List<Tasks> list ;
+
+		List<Tasks> list;
+
 		if (user.getName().equals("admin-name")) {
-			list=repo.findAll();
+			list = repo.findAll();
 			for (Tasks tasks2 : list) {
-			tasks.add(tasks2.getDate().toLocalDate(), tasks2);
+				tasks.add(tasks2.getDate().toLocalDate(), tasks2);
 			}
 		} else {
-			list = repo.findByDateBetween(daystart.atTime(0,0), daysend.atTime(23,59), "user-name");
+			list = repo.findByDateBetween(daystart1.atTime(0, 0), daysend.atTime(23, 59), user.getName());
 			for (Tasks tasks3 : list) {
-			tasks.add(tasks3.getDate().toLocalDate(), tasks3);
+				tasks.add(tasks3.getDate().toLocalDate(), tasks3);
 			}
 		}
-//		for (Tasks tasks2 : list) {
-//			if (tasks2.getName().equals(user.getName()) && user.getName().equals("user-name")) {
-//				tasks.add(tasks2.getDate().toLocalDate(), tasks2);
-//			}else if ( user.getName().equals("admin-name")){
-//				tasks.add(tasks2.getDate().toLocalDate(), tasks2);
-//			}
-//		}
-		
 		model.addAttribute("tasks", tasks);
 
 		return "main";
