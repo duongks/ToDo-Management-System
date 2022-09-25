@@ -69,19 +69,16 @@ public class CalendarController {
 
 		MultiValueMap<LocalDate, Tasks> tasks = new LinkedMultiValueMap<>();
 
-		List<Tasks> list;
-
-		if (user.getName().equals("admin-name")) {
-			list = repo.findAll();
-			for (Tasks tasks2 : list) {
+		List<Tasks> list = repo.findByDateBetween(daystart1.atTime(0, 0), daysend.atTime(23, 59));
+		for (Tasks tasks2 : list) {
+			if (tasks2.getName().equals(user.getName()) && user.getName().equals("user-name")) {
+				tasks.add(tasks2.getDate().toLocalDate(), tasks2);
+			} else if (user.getName().equals("admin-name")) {
 				tasks.add(tasks2.getDate().toLocalDate(), tasks2);
 			}
-		} else {
-			list = repo.findByDateBetween(daystart1.atTime(0, 0), daysend.atTime(23, 59), user.getName());
-			for (Tasks tasks3 : list) {
-				tasks.add(tasks3.getDate().toLocalDate(), tasks3);
-			}
+
 		}
+
 		model.addAttribute("tasks", tasks);
 
 		return "main";
